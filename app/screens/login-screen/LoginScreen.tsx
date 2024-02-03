@@ -118,6 +118,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         tx="loginScreen.tapToSignIn"
         textStyle={$tapButtonText}
         style={$tapButton}
+        pressedStyle={$tapButtonPressed}
         preset="reversed"
         onPress={login}
       />
@@ -152,7 +153,10 @@ const $tapButton: ViewStyle = {
   backgroundColor: colors.palette.goldPure,
   borderRadius: spacing.md
 }
+
+const $tapButtonPressed:ViewStyle = {
+  backgroundColor: colors.palette.gold900,
+}
 const $tapButtonText: TextStyle = {
   color: colors.palette.neutral900,
 }
-// @demo remove-file

@@ -31,6 +31,7 @@ const palette = {
   accent500: "#FFBB50",
 
   goldPure: "#F3BB3C",
+  gold900: "#C49000",
 
   angry100: "#F2D6CD",
   angry500: "#C03403",
