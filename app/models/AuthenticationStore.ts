@@ -29,7 +29,17 @@ export const AuthenticationStoreModel = types
         throw e;
       }
     }
-    )
+    ),
+    logout: flow(function*() {
+      try {
+        yield auth().signOut();
+        store.authToken = undefined
+        store.authEmail = ""
+      }catch (e) {
+        __DEV__ && console.tron.error("fail to logout", e);
+        throw e;
+      }
+    }),
   }))
   .views((store) => ({
     get isAuthenticated() {
@@ -49,10 +59,6 @@ export const AuthenticationStoreModel = types
     },
     setAuthEmail(value: string) {
       store.authEmail = value.replace(/ /g, "")
-    },
-    logout() {
-      store.authToken = undefined
-      store.authEmail = ""
     },
   }))
 
