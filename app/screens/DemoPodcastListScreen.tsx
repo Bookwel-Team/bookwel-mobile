@@ -24,7 +24,7 @@ import Animated, {
 import { Button, Card, EmptyState, Icon, Screen, Text, Toggle } from "../components"
 import { isRTL, translate } from "../i18n"
 import { useStores } from "../models"
-import { Episode } from "../models/Episode"
+import { Episode } from "../models/entities/Episode"
 import { DemoTabScreenProps } from "../navigators/DemoNavigator"
 import { colors, spacing } from "../theme"
 import { delay } from "../utils/delay"

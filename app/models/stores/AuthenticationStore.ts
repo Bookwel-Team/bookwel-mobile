@@ -1,5 +1,5 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
-import { UserModel } from "./User"
+import { UserModel } from "../entities/User"
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth"
 
 export const AuthenticationStoreModel = types
