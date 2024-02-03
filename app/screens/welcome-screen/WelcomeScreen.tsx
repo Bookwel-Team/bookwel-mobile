@@ -7,7 +7,7 @@ import { AppStackScreenProps } from "../../navigators" // @demo remove-current-l
 import { colors, spacing } from "../../theme"
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle"
 
-const welcomeLogo = require("./login-logo.png")
+const welcomeLogo = require("../../../assets/login-logo.png")
 const welcomeFace = require("../../../assets/images/welcome-face.png")
 
 interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
