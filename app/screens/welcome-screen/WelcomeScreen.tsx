@@ -22,8 +22,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
     navigation.navigate("Login")
   }
   function goToSignUp() {
-    // TODO sign up screen
-    navigation.navigate("Login");
+    navigation.navigate("SignUp");
   }
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
 
