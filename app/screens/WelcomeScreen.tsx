@@ -26,25 +26,19 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
     authenticationStore: { logout },
   } = useStores()
 
-  function goNext() {
-    navigation.navigate("Demo", { screen: "DemoShowroom" })
+  function goToLogin() {
+    navigation.navigate("Login")
   }
-
-  useHeader(
-    {
-      rightTx: "common.logOut",
-      onRightPress: logout,
-    },
-    [logout],
-  )
-  // @demo remove-block-end
-
+  function goToSignUp() {
+    // TODO sign up screen
+    navigation.navigate("Login");
+  }
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
 
   return (
     <View style={$container}>
       <View style={$topContainer}>
-        <Image style={$welcomeLogo} source={welcomeLogo} resizeMode="contain" />
+        <Image source={require("./login-logo.png")} style={$welcomeLogo} resizeMode="contain"/>
         <Text
           testID="welcome-heading"
           style={$welcomeHeading}
@@ -62,9 +56,14 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
           testID="next-screen-button"
           preset="reversed"
           tx="welcomeScreen.letsGo"
-          onPress={goNext}
+          onPress={goToLogin}
         />
-        {/* @demo remove-block-end */}
+        <Button
+          testID="next-screen-button"
+          preset="reversed"
+          tx="welcomeScreen.createAccount"
+          onPress={goToSignUp}
+          />
       </View>
     </View>
   )
@@ -81,6 +80,7 @@ const $topContainer: ViewStyle = {
   flexBasis: "57%",
   justifyContent: "center",
   paddingHorizontal: spacing.lg,
+  paddingTop: spacing.xxl
 }
 
 const $bottomContainer: ViewStyle = {
@@ -94,7 +94,7 @@ const $bottomContainer: ViewStyle = {
   justifyContent: "space-around",
 }
 const $welcomeLogo: ImageStyle = {
-  height: 88,
+  height: 130,
   width: "100%",
   marginBottom: spacing.xxl,
 }
