@@ -7,7 +7,7 @@
 import { DarkTheme, DefaultTheme, NavigationContainer, NavigatorScreenParams } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useColorScheme } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
@@ -58,14 +58,11 @@ const AppStack = observer(function AppStack() {
     authenticationStore: { isAuthenticated },
   } = useStores()
   // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
 
   async function onAuthStateChanged(user: FirebaseAuthTypes.User) {
     if (!user){
       __DEV__ && console.tron.log("no user retrieved!");
-      return
     }
-    if (initializing) setInitializing(false);
   }
 
   useEffect(() => {
@@ -82,7 +79,7 @@ const AppStack = observer(function AppStack() {
       initialRouteName={isAuthenticated ? "Welcome" : "Login"} // @demo remove-current-line
     >
       {/* @demo remove-block-start */}
-      {isAuthenticated && !initializing ? (
+      {isAuthenticated ? (
         <>
           {/* @demo remove-block-end */}
           <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
