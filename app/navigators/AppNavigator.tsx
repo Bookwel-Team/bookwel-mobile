@@ -4,15 +4,10 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-  NavigatorScreenParams, // @demo remove-current-line
-} from "@react-navigation/native"
+import { DarkTheme, DefaultTheme, NavigationContainer, NavigatorScreenParams } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useColorScheme } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
@@ -20,6 +15,7 @@ import { useStores } from "../models" // @demo remove-current-line
 import { DemoNavigator, DemoTabParamList } from "./DemoNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -61,6 +57,23 @@ const AppStack = observer(function AppStack() {
   const {
     authenticationStore: { isAuthenticated },
   } = useStores()
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+
+  async function onAuthStateChanged(user: FirebaseAuthTypes.User) {
+    if (!user){
+      __DEV__ && console.tron.log("no user retrieved!");
+      return
+    }
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+
 
   // @demo remove-block-end
   return (
@@ -69,7 +82,7 @@ const AppStack = observer(function AppStack() {
       initialRouteName={isAuthenticated ? "Welcome" : "Login"} // @demo remove-current-line
     >
       {/* @demo remove-block-start */}
-      {isAuthenticated ? (
+      {isAuthenticated && !initializing ? (
         <>
           {/* @demo remove-block-end */}
           <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />

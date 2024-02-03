@@ -12,29 +12,32 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const authPasswordInput = useRef<TextInput>()
 
   const [authPassword, setAuthPassword] = useState("")
+  const [email, setEmail] = useState("");
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const {
-    authenticationStore: { authEmail, setAuthEmail, setAuthToken, validationError },
+    authenticationStore: { validationError, login: performLogin },
   } = useStores()
 
   useEffect(() => {
+    // TODO
     // Here is where you could fetch credentials from keychain or storage
     // and pre-fill the form fields.
-    setAuthEmail("ignite@infinite.red")
+    setEmail("ignite@infinite.red")
     setAuthPassword("ign1teIsAwes0m3")
 
     // Return a "cleanup" function that React will run when the component unmounts
     return () => {
       setAuthPassword("")
-      setAuthEmail("")
+      setEmail("");
     }
   }, [])
 
   const error = isSubmitted ? validationError : ""
 
-  function login() {
+  async function login() {
+    await performLogin(email, authPassword);
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
 
@@ -44,10 +47,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     // If successful, reset the fields and set the token.
     setIsSubmitted(false)
     setAuthPassword("")
-    setAuthEmail("")
-
-    // We'll mock this with a fake token.
-    setAuthToken(String(Date.now()))
+    setEmail("")
   }
 
   const PasswordRightAccessory = useMemo(
@@ -73,12 +73,14 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       safeAreaEdges={["top", "bottom"]}
     >
       <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
-      <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
+      {/* <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} /> */}
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={email}
+        onChangeText={(email)=>{
+          setEmail(email);
+        }}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="email"
