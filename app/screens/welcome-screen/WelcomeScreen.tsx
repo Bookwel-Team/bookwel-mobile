@@ -1,19 +1,14 @@
 import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import {
-  Button, // @demo remove-current-line
-  Text,
-} from "../components"
-import { isRTL } from "../i18n"
-import { useStores } from "../models" // @demo remove-current-line
-import { AppStackScreenProps } from "../navigators" // @demo remove-current-line
-import { colors, spacing } from "../theme"
-import { useHeader } from "../utils/useHeader" // @demo remove-current-line
-import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
+import { Button, Text } from "../../components"
+import { isRTL } from "../../i18n"
+import { AppStackScreenProps } from "../../navigators" // @demo remove-current-line
+import { colors, spacing } from "../../theme"
+import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle"
 
-const welcomeLogo = require("../../assets/images/logo.png")
-const welcomeFace = require("../../assets/images/welcome-face.png")
+const welcomeLogo = require("./login-logo.png")
+const welcomeFace = require("../../../assets/images/welcome-face.png")
 
 interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
 
@@ -22,9 +17,6 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
 ) {
   // @demo remove-block-start
   const { navigation } = _props
-  const {
-    authenticationStore: { logout },
-  } = useStores()
 
   function goToLogin() {
     navigation.navigate("Login")
@@ -38,7 +30,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
   return (
     <View style={$container}>
       <View style={$topContainer}>
-        <Image source={require("./login-logo.png")} style={$welcomeLogo} resizeMode="contain"/>
+        <Image source={welcomeLogo} style={$welcomeLogo} resizeMode="contain"/>
         <Text
           testID="welcome-heading"
           style={$welcomeHeading}
@@ -94,9 +86,9 @@ const $bottomContainer: ViewStyle = {
   justifyContent: "space-around",
 }
 const $welcomeLogo: ImageStyle = {
-  height: 130,
+  height: 150,
   width: "100%",
-  marginBottom: spacing.xxl,
+  marginBottom: spacing.md,
 }
 
 const $welcomeFace: ImageStyle = {
