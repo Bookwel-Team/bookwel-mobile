@@ -30,6 +30,8 @@ const palette = {
   accent400: "#FBC878",
   accent500: "#FFBB50",
 
+  goldPure: "#F3BB3C",
+
   angry100: "#F2D6CD",
   angry500: "#C03403",
 
@@ -59,7 +61,7 @@ export const colors = {
   /**
    * The default color of the screen background.
    */
-  background: palette.neutral200,
+  background: palette.neutral100,
   /**
    * The default border color.
    */

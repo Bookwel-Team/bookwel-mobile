@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
 import { TextInput, TextStyle, ViewStyle } from "react-native"
-import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
-import { useStores } from "../models"
-import { AppStackScreenProps } from "../navigators"
-import { colors, spacing } from "../theme"
+import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../../components"
+import { useStores } from "../../models"
+import { AppStackScreenProps } from "../../navigators"
+import { colors, spacing } from "../../theme"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -126,6 +126,7 @@ const $screenContentContainer: ViewStyle = {
 
 const $signIn: TextStyle = {
   marginBottom: spacing.sm,
+  alignSelf: "center",
 }
 
 const $enterDetails: TextStyle = {
@@ -143,6 +144,8 @@ const $textField: ViewStyle = {
 
 const $tapButton: ViewStyle = {
   marginTop: spacing.xs,
+  backgroundColor: colors.palette.goldPure,
+  borderRadius: spacing.md
 }
 
 // @demo remove-file
