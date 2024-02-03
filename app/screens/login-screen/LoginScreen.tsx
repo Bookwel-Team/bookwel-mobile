@@ -5,10 +5,12 @@ import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "
 import { useStores } from "../../models"
 import { AppStackScreenProps } from "../../navigators"
 import { colors, spacing } from "../../theme"
+import { useHeader } from "../../utils/useHeader"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
+  const {navigation : {goBack}} = _props;
   const authPasswordInput = useRef<TextInput>()
 
   const [authPassword, setAuthPassword] = useState("")
@@ -19,7 +21,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const {
     authenticationStore: { validationError, login: performLogin },
   } = useStores()
-
+  useHeader({
+    rightIcon: "back",
+    onRightPress: goBack
+  })
   useEffect(() => {
     // TODO
     // Here is where you could fetch credentials from keychain or storage
@@ -111,6 +116,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"
+        textStyle={$tapButtonText}
         style={$tapButton}
         preset="reversed"
         onPress={login}
@@ -126,7 +132,6 @@ const $screenContentContainer: ViewStyle = {
 
 const $signIn: TextStyle = {
   marginBottom: spacing.sm,
-  alignSelf: "center",
 }
 
 const $enterDetails: TextStyle = {
@@ -147,5 +152,7 @@ const $tapButton: ViewStyle = {
   backgroundColor: colors.palette.goldPure,
   borderRadius: spacing.md
 }
-
+const $tapButtonText: TextStyle = {
+  color: colors.palette.neutral900,
+}
 // @demo remove-file
