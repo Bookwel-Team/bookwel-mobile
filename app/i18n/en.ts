@@ -31,6 +31,10 @@ const en = {
   errors: {
     invalidEmail: "Invalid email address.",
   },
+  signUpScreen:{
+    signUp: "Sign Up",
+    continue: "Continue"
+  },
   loginScreen: {
     signIn: "Sign In",
     enterDetails:
