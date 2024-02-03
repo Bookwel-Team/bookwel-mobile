@@ -11,9 +11,9 @@ export const AuthenticationStoreModel = types
     user: types.maybeNull(UserModel),
   })
   .actions((store) => ({
-    login: flow(function* (password: string, email: string) {
+    login: flow(function* (email:string, password: string) {
       try {
-        const userCredential: FirebaseAuthTypes.UserCredential = yield auth().createUserWithEmailAndPassword(email, password);
+        const userCredential: FirebaseAuthTypes.UserCredential = yield auth().signInWithEmailAndPassword(email, password);
 
         const user = userCredential.user
         store.authEmail = user.email;
@@ -23,8 +23,10 @@ export const AuthenticationStoreModel = types
       }catch (e) {
         if (e.code === 'auth/email-already-in-use') {
           __DEV__ && console.tron.log("That email address is already in use!")
+        }else if (e.code==='auth/invalid-credential'){
+          __DEV__ && console.error("The supplied auth credential is incorrect, malformed or has expired.");
         }
-
+        __DEV__ && console.error(e);
         __DEV__ && console.tron.error(e.message, e);
         throw e;
       }
