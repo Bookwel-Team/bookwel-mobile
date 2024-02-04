@@ -61,6 +61,12 @@ export const AuthenticationStoreModel = types
 
     return { logout }
   })
+  .actions(()=>{
+    const signUp=flow(function* (email:string, password:string){
+        yield auth().createUserWithEmailAndPassword(email, password);
+    })
+    return { signUp };
+  })
   .views((store) => ({
     get isAuthenticated() {
       return !!store.authToken
