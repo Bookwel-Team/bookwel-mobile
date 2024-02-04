@@ -32,6 +32,7 @@ const en = {
     invalidEmail: "Invalid email address.",
   },
   signUpScreen:{
+    createAccount: "Create a new account",
     signUp: "Sign Up",
     continue: "Continue"
   },

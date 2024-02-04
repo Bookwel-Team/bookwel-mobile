@@ -77,7 +77,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   return (
     <Screen style={$root} preset="auto" safeAreaEdges={["top", "bottom"]}
     >
-     <Text testID="login-heading" tx="signUpScreen.signUp" preset="heading" style={$signIn} />
+     <Text testID="login-heading" tx="signUpScreen.createAccount" preset="heading" style={$signIn} />
       {/* <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} /> */}
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
@@ -115,7 +115,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
       <Button
         testID="login-button"
-        tx="signUpScreen.continue"
+        tx="signUpScreen.signUp"
         textStyle={$tapButtonText}
         style={$tapButton}
         pressedStyle={$tapButtonPressed}
