@@ -1,20 +1,30 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
 import { TextInput, TextStyle, ViewStyle } from "react-native"
-import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../../components"
+import {
+  AccountCreationQuestion,
+  Button,
+  Icon,
+  Screen,
+  Text,
+  TextField,
+  TextFieldAccessoryProps,
+} from "../../components"
 import { useStores } from "../../models"
 import { AppStackScreenProps } from "../../navigators"
 import { colors, spacing } from "../../theme"
 import { useHeader } from "../../utils/useHeader"
 
-interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
+interface LoginScreenProps extends AppStackScreenProps<"Login"> {
+}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
-  const {navigation : {goBack}} = _props;
+  const { navigation: { goBack } } = _props
+  const { navigation } = _props
   const authPasswordInput = useRef<TextInput>()
 
   const [authPassword, setAuthPassword] = useState("")
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
@@ -23,7 +33,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   } = useStores()
   useHeader({
     rightIcon: "back",
-    onRightPress: goBack
+    onRightPress: goBack,
   })
   useEffect(() => {
     // TODO
@@ -35,14 +45,14 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     // Return a "cleanup" function that React will run when the component unmounts
     return () => {
       setAuthPassword("")
-      setEmail("");
+      setEmail("")
     }
   }, [])
 
   const error = isSubmitted ? validationError : ""
 
   async function login() {
-    await performLogin(email, authPassword);
+    await performLogin(email, authPassword)
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
 
@@ -83,8 +93,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
       <TextField
         value={email}
-        onChangeText={(email)=>{
-          setEmail(email);
+        onChangeText={(email) => {
+          setEmail(email)
         }}
         containerStyle={$textField}
         autoCapitalize="none"
@@ -122,6 +132,11 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         preset="reversed"
         onPress={login}
       />
+      <AccountCreationQuestion
+        onPress={() => navigation.navigate("SignUp")}
+        questionTx={"loginScreen.dontHaveAccountQuestion"}
+        actionTextTx={"signUpScreen.signUp"}
+      />
     </Screen>
   )
 })
@@ -151,10 +166,10 @@ const $textField: ViewStyle = {
 const $tapButton: ViewStyle = {
   marginTop: spacing.xs,
   backgroundColor: colors.palette.goldPure,
-  borderRadius: spacing.md
+  borderRadius: spacing.md,
 }
 
-const $tapButtonPressed:ViewStyle = {
+const $tapButtonPressed: ViewStyle = {
   backgroundColor: colors.palette.gold900,
 }
 const $tapButtonText: TextStyle = {

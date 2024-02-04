@@ -34,7 +34,8 @@ const en = {
   signUpScreen:{
     createAccount: "Create a new account",
     signUp: "Sign Up",
-    continue: "Continue"
+    continue: "Continue",
+    haveAccountQuestion: "Already have an account ?"
   },
   loginScreen: {
     signIn: "Sign In",
@@ -46,6 +47,7 @@ const en = {
     passwordFieldPlaceholder: "Super secret password here",
     tapToSignIn: "Tap to sign in!",
     hint: "Hint: you can use any email address and your favorite password :)",
+    dontHaveAccountQuestion: "Don have an account?"
   },
   demoNavigator: {
     componentsTab: "Components",
