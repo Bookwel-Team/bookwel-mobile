@@ -41,16 +41,21 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
       </View>
 
       <View style={[$bottomContainer, $bottomContainerInsets]}>
-        <Text tx="welcomeScreen.postscript" size="md" />
-        {/* @demo remove-block-start */}
+        {/* <Text tx="welcomeScreen.postscript" size="md" /> */}
         <Button
           testID="next-screen-button"
+          textStyle={$tapButtonText}
+          style={$tapButton}
+          pressedStyle={$tapButtonPressed}
           preset="reversed"
           tx="welcomeScreen.letsGo"
           onPress={goToLogin}
         />
         <Button
           testID="next-screen-button"
+          style={$signUpButton}
+          pressedStyle={$signUpButtonPressed}
+          textStyle={$signUpButtonText}
           preset="reversed"
           tx="welcomeScreen.createAccount"
           onPress={goToSignUp}
@@ -75,14 +80,10 @@ const $topContainer: ViewStyle = {
 }
 
 const $bottomContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 0,
-  flexBasis: "43%",
   backgroundColor: colors.palette.neutral100,
   borderTopLeftRadius: 16,
   borderTopRightRadius: 16,
   paddingHorizontal: spacing.lg,
-  justifyContent: "space-around",
 }
 const $welcomeLogo: ImageStyle = {
   height: 150,
@@ -101,4 +102,34 @@ const $welcomeFace: ImageStyle = {
 
 const $welcomeHeading: TextStyle = {
   marginBottom: spacing.md,
+}
+// common button styles
+const $buttons: ViewStyle = {
+  borderRadius: spacing.md,
+  marginBottom: spacing.md
+}
+
+const $tapButton: ViewStyle = {
+  ...$buttons,
+  marginTop: spacing.xs,
+  backgroundColor: colors.palette.goldPure,
+}
+
+const $tapButtonPressed:ViewStyle = {
+  backgroundColor: colors.palette.gold900,
+}
+const $tapButtonText: TextStyle = {
+  color: colors.palette.neutral900,
+}
+const $signUpButton: ViewStyle = {
+  ...$buttons,
+  backgroundColor: "transparent",
+  borderWidth: 2,
+  borderColor: colors.palette.secondary600
+}
+const $signUpButtonText: TextStyle = {
+  color: colors.palette.neutral900
+}
+const $signUpButtonPressed: ViewStyle = {
+  backgroundColor: colors.palette.secondary100
 }
