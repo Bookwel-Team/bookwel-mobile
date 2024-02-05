@@ -2,6 +2,8 @@ import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { UserModel } from "../entities/User"
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth"
 
+export const  authEmailAlreadyInUse = "auth/email-already-in-use"
+export const authInvalidCredential = "auth/invalid-credential"
 export const AuthenticationStoreModel = types
   .model("AuthenticationStore")
   .props({
@@ -18,9 +20,7 @@ export const AuthenticationStoreModel = types
     })
 
     const loginFail = (e) => {
-      if (e.code === "auth/email-already-in-use") {
-        __DEV__ && console.tron.log("That email address is already in use!")
-      } else if (e.code === "auth/invalid-credential") {
+      if (e.code === authInvalidCredential) {
         __DEV__ && console.error("The supplied auth credential is incorrect, malformed or has expired.")
       } else {
         __DEV__ && console.tron.error(e.message, e)
@@ -61,11 +61,25 @@ export const AuthenticationStoreModel = types
 
     return { logout }
   })
-  .actions(()=>{
-    const signUp=flow(function* (email:string, password:string){
-        yield auth().createUserWithEmailAndPassword(email, password);
+  .actions(() => {
+    const signUpFail = function(e) {
+      if (e.code === "auth/email-already-in-use") {
+        __DEV__ && console.tron.log("That email address is already in use!")
+      }
+    }
+    const signUpSuccess = function() {
+
+    }
+    const signUp = flow(function* (email: string, password: string) {
+      try {
+        yield auth().createUserWithEmailAndPassword(email, password)
+        signUpSuccess()
+      } catch (e) {
+        signUpFail(e)
+        throw e;
+      }
     })
-    return { signUp };
+    return { signUp }
   })
   .views((store) => ({
     get isAuthenticated() {
