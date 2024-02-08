@@ -1,6 +1,8 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { UserModel } from "../entities/User"
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth"
+import { AuthApi } from "../../services/api/auth-api"
+import { api } from "../../services/api"
 
 export const  authEmailAlreadyInUse = "auth/email-already-in-use"
 export const authInvalidCredential = "auth/invalid-credential"
@@ -29,7 +31,8 @@ export const AuthenticationStoreModel = types
 
     const login = flow(function* (email: string, password: string) {
       try {
-        const userCredential: FirebaseAuthTypes.UserCredential = yield auth().signInWithEmailAndPassword(email, password)
+        const fbAuthApi = new AuthApi(api);
+        const userCredential = yield fbAuthApi.login(email, password);
         const user = userCredential.user
         yield loginSuccess(user)
         __DEV__ && console.tron.log("user logged in!")
@@ -67,12 +70,14 @@ export const AuthenticationStoreModel = types
         __DEV__ && console.tron.log("That email address is already in use!")
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const signUpSuccess = function() {
 
     }
     const signUp = flow(function* (email: string, password: string) {
       try {
-        yield auth().createUserWithEmailAndPassword(email, password)
+        const authApi = new AuthApi(api)
+        yield authApi.signUp(email, password);
         signUpSuccess()
       } catch (e) {
         signUpFail(e)
