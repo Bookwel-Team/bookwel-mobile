@@ -11,7 +11,7 @@ interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {
 }
 
 export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScreen(_props) {
-  const { navigation: { goBack } } = _props
+  const { navigation: {goBack} } = _props
   const { navigation } = _props
   const authPasswordInput = useRef<TextInput>()
 
