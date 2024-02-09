@@ -13,7 +13,13 @@ export const AuthenticationStoreModel = types
     authEmail: "",
     uid: "",
     user: types.maybeNull(UserModel),
+    isLoading: false
   })
+  .actions((store)=>({
+    setIsLoading: (value: boolean)=>{
+      store.isLoading = value
+    }
+  }))
   .actions((store) => {
     const loginSuccess = flow(function* (user: FirebaseAuthTypes.User) {
       store.authEmail = user.email
