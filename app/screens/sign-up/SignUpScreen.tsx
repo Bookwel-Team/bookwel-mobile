@@ -22,7 +22,6 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   const [email, setEmail] = useState("")
   const [emailError, setEmailError] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const {
     authenticationStore: { validationError, signUp, isLoading, setIsLoading },
@@ -48,24 +47,18 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     try {
       await signUp(email, authPassword)
     } catch (e) {
-      console.log(e.code)
       if (e.code === AUTH_PROBLEMS.authEmailAlreadyInUse) {
-        setEmailError("The email address is already in use by another account")
-        console.log("The email address is already in use by another account")
+        setEmailError("The email address is already in use by another account");
       }
-      if (e.code === AUTH_PROBLEMS.authInvalidCredential) {
-        //setEmailError(e.message);
+      else if (e.code === AUTH_PROBLEMS.authInvalidCredential) {
+        setEmailError("Invalid email");
       }
     }
-    setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
 
     setIsLoading(false)
     if (validationError) return
 
-    // Make a request to your server to get an authentication token.
-    // If successful, reset the fields and set the token.
-    setIsSubmitted(false)
     setAuthPassword("")
     setEmail("")
     navigation.navigate("Login")
@@ -93,14 +86,11 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     >
       {isLoading && <Loader />}
       <Text testID="login-heading" tx="signUpScreen.createAccount" preset="heading" style={$signIn} />
-      {/* <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} /> */}
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
       <TextField
         value={email}
-        onChangeText={(email) => {
-          setEmail(email)
-        }}
+        onChangeText={setEmail}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="email"
