@@ -6,48 +6,61 @@ import { AccountCreationQuestion, Button, Icon, Screen, Text, TextField, TextFie
 import { colors, spacing } from "app/theme"
 import { useStores } from "app/models"
 import { useHeader } from "app/utils/useHeader"
+import { Loader } from "../../components/Loader"
+import { AUTH_PROBLEMS } from "../../services/api/auth-api"
+
 
 interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {
 }
 
 export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScreen(_props) {
-  const { navigation: {goBack} } = _props
+  const { navigation: { goBack } } = _props
   const { navigation } = _props
   const authPasswordInput = useRef<TextInput>()
 
   const [authPassword, setAuthPassword] = useState("")
   const [email, setEmail] = useState("")
+  const [emailError, setEmailError] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const {
-    authenticationStore: { validationError, login: performLogin },
+    authenticationStore: { validationError, signUp, isLoading, setIsLoading },
   } = useStores()
   useHeader({
     rightIcon: "back",
     onRightPress: goBack,
   })
   useEffect(() => {
-    // TODO
-    // Here is where you could fetch credentials from keychain or storage
-    // and pre-fill the form fields.
     setEmail("ignite@infinite.red")
     setAuthPassword("ign1teIsAwes0m3")
 
-    // Return a "cleanup" function that React will run when the component unmounts
     return () => {
       setAuthPassword("")
       setEmail("")
     }
   }, [])
 
-  const error = isSubmitted ? validationError : ""
+  const error = emailError
 
-  async function login() {
-    await performLogin(email, authPassword)
+  async function createAccount() {
+    setIsLoading(true)
+    try {
+      await signUp(email, authPassword)
+    } catch (e) {
+      console.log(e.code)
+      if (e.code === AUTH_PROBLEMS.authEmailAlreadyInUse) {
+        setEmailError("The email address is already in use by another account")
+        console.log("The email address is already in use by another account")
+      }
+      if (e.code === AUTH_PROBLEMS.authInvalidCredential) {
+        //setEmailError(e.message);
+      }
+    }
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
 
+    setIsLoading(false)
     if (validationError) return
 
     // Make a request to your server to get an authentication token.
@@ -55,6 +68,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     setIsSubmitted(false)
     setAuthPassword("")
     setEmail("")
+    navigation.navigate("Login")
   }
 
   const PasswordRightAccessory = useMemo(
@@ -75,8 +89,9 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
 
   return (
-    <Screen style={$root} preset="auto" safeAreaEdges={["top", "bottom"]}
+    <Screen style={$root} preset={"scroll"} safeAreaEdges={["bottom"]}
     >
+      {isLoading && <Loader />}
       <Text testID="login-heading" tx="signUpScreen.createAccount" preset="heading" style={$signIn} />
       {/* <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} /> */}
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
@@ -109,7 +124,6 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         secureTextEntry={isAuthPasswordHidden}
         labelTx="loginScreen.passwordFieldLabel"
         placeholderTx="loginScreen.passwordFieldPlaceholder"
-        onSubmitEditing={login}
         RightAccessory={PasswordRightAccessory}
       />
 
@@ -120,7 +134,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         style={$tapButton}
         pressedStyle={$tapButtonPressed}
         preset="reversed"
-        onPress={login}
+        onPress={createAccount}
       />
       <AccountCreationQuestion
         onPress={() => navigation.navigate("Login")}
@@ -133,7 +147,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
 
 const $root: ViewStyle = {
-  paddingVertical: spacing.xxl,
+  paddingVertical: spacing.xl,
   paddingHorizontal: spacing.lg,
 }
 
@@ -141,9 +155,6 @@ const $signIn: TextStyle = {
   marginBottom: spacing.sm,
 }
 
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.lg,
-}
 
 const $hint: TextStyle = {
   color: colors.tint,

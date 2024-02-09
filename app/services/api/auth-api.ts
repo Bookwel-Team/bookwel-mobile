@@ -9,10 +9,17 @@ export class AuthApi {
   }
 
   login(email: string, password: string) {
-        return auth().signInWithEmailAndPassword(email, password);
+    return auth().signInWithEmailAndPassword(email, password)
   }
 
   signUp(email: string, password: string) {
-    return auth().createUserWithEmailAndPassword(email, password);
+    return auth().createUserWithEmailAndPassword(email, password)
   }
 }
+
+export const AUTH_PROBLEMS = {
+  authEmailAlreadyInUse: "auth/email-already-in-use",
+  emailInvalid: "auth/invalid-email",
+  weakPassword: "auth/weak-password",
+  authInvalidCredential: "auth/invalid-credential",
+} as const

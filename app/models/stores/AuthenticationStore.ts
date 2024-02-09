@@ -1,11 +1,9 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { UserModel } from "../entities/User"
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth"
-import { AuthApi } from "../../services/api/auth-api"
+import { AuthApi, AUTH_PROBLEMS } from "../../services/api/auth-api"
 import { api } from "../../services/api"
 
-export const  authEmailAlreadyInUse = "auth/email-already-in-use"
-export const authInvalidCredential = "auth/invalid-credential"
 export const AuthenticationStoreModel = types
   .model("AuthenticationStore")
   .props({
@@ -28,7 +26,7 @@ export const AuthenticationStoreModel = types
     })
 
     const loginFail = (e) => {
-      if (e.code === authInvalidCredential) {
+      if (e.code === AUTH_PROBLEMS.authInvalidCredential) {
         __DEV__ && console.error("The supplied auth credential is incorrect, malformed or has expired.")
       } else {
         __DEV__ && console.tron.error(e.message, e)
