@@ -7,10 +7,11 @@ const en = {
   },
   welcomeScreen: {
     postscript:
-      "psst  — This probably isn't what your app looks like. (Unless your designer handed you these screens, and in that case, ship it!)",
-    readyForLaunch: "Your app, almost ready for launch!",
+      "Let BookWel takes the guesswork out of finding your next captivating read. ",
+    readyForLaunch: "Oour Next Great Read Awaits",
     exciting: "(ohh, this is exciting!)",
-    letsGo: "Let's go!", // @demo remove-current-line
+    letsGo: "Sign In", // @demo remove-current-line
+    createAccount: "Sign Up"
   },
   errorScreen: {
     title: "Something went wrong!",
@@ -30,6 +31,12 @@ const en = {
   errors: {
     invalidEmail: "Invalid email address.",
   },
+  signUpScreen:{
+    createAccount: "Create a new account",
+    signUp: "Sign Up",
+    continue: "Continue",
+    haveAccountQuestion: "Already have an account ?"
+  },
   loginScreen: {
     signIn: "Sign In",
     enterDetails:
@@ -40,6 +47,7 @@ const en = {
     passwordFieldPlaceholder: "Super secret password here",
     tapToSignIn: "Tap to sign in!",
     hint: "Hint: you can use any email address and your favorite password :)",
+    dontHaveAccountQuestion: "Don have an account?"
   },
   demoNavigator: {
     componentsTab: "Components",

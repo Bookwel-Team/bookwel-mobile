@@ -1,53 +1,71 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
 import { TextInput, TextStyle, ViewStyle } from "react-native"
-import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
-import { useStores } from "../models"
-import { AppStackScreenProps } from "../navigators"
-import { colors, spacing } from "../theme"
+import {
+  AccountCreationQuestion,
+  Button,
+  Icon,
+  Screen,
+  Text,
+  TextField,
+  TextFieldAccessoryProps,
+} from "../../components"
+import { useStores } from "../../models"
+import { AppStackScreenProps } from "../../navigators"
+import { colors, spacing } from "../../theme"
+import { useHeader } from "../../utils/useHeader"
+import { Loader } from "../../components/Loader"
+import { showSnackBar } from "../../utils/snackBar"
 
-interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
+interface LoginScreenProps extends AppStackScreenProps<"Login"> {
+}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
+  const { navigation: { goBack } } = _props
+  const { navigation } = _props
   const authPasswordInput = useRef<TextInput>()
 
   const [authPassword, setAuthPassword] = useState("")
+  const [email, setEmail] = useState("")
+  const [emailError, setEmailError] = useState("")
+  const [passwordError, setPasswordError] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
-  const {
-    authenticationStore: { authEmail, setAuthEmail, setAuthToken, validationError },
-  } = useStores()
 
+  const {
+    authenticationStore: { login: performLogin, setIsLoading, isLoading },
+  } = useStores()
+  useHeader({
+    rightIcon: "back",
+    onRightPress: goBack,
+  })
   useEffect(() => {
-    // Here is where you could fetch credentials from keychain or storage
-    // and pre-fill the form fields.
-    setAuthEmail("ignite@infinite.red")
+    setEmail("ignite@infinite.red")
     setAuthPassword("ign1teIsAwes0m3")
 
-    // Return a "cleanup" function that React will run when the component unmounts
     return () => {
       setAuthPassword("")
-      setAuthEmail("")
+      setEmail("")
     }
   }, [])
 
-  const error = isSubmitted ? validationError : ""
+  const error = emailError || passwordError
 
-  function login() {
-    setIsSubmitted(true)
-    setAttemptsCount(attemptsCount + 1)
+  async function login() {
+    setIsLoading(true)
+    try {
+      await performLogin(email, authPassword)
+    } catch (e) {
+      console.error(e.message)
+      showSnackBar("Verify your password or your email!", "error")
+      setIsLoading(false)
+      setAttemptsCount(attemptsCount + 1)
+      return
+    }
 
-    if (validationError) return
-
-    // Make a request to your server to get an authentication token.
-    // If successful, reset the fields and set the token.
-    setIsSubmitted(false)
+    setIsLoading(false)
     setAuthPassword("")
-    setAuthEmail("")
-
-    // We'll mock this with a fake token.
-    setAuthToken(String(Date.now()))
+    setEmail("")
   }
 
   const PasswordRightAccessory = useMemo(
@@ -72,13 +90,13 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
+      {isLoading && <Loader />}
       <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
-      <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={email}
+        onChangeText={setEmail}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="email"
@@ -109,9 +127,16 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"
+        textStyle={$tapButtonText}
         style={$tapButton}
+        pressedStyle={$tapButtonPressed}
         preset="reversed"
         onPress={login}
+      />
+      <AccountCreationQuestion
+        onPress={() => navigation.navigate("SignUp")}
+        questionTx={"loginScreen.dontHaveAccountQuestion"}
+        actionTextTx={"signUpScreen.signUp"}
       />
     </Screen>
   )
@@ -126,10 +151,6 @@ const $signIn: TextStyle = {
   marginBottom: spacing.sm,
 }
 
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.lg,
-}
-
 const $hint: TextStyle = {
   color: colors.tint,
   marginBottom: spacing.md,
@@ -141,6 +162,13 @@ const $textField: ViewStyle = {
 
 const $tapButton: ViewStyle = {
   marginTop: spacing.xs,
+  backgroundColor: colors.palette.goldPure,
+  borderRadius: spacing.md,
 }
 
-// @demo remove-file
+const $tapButtonPressed: ViewStyle = {
+  backgroundColor: colors.palette.gold900,
+}
+const $tapButtonText: TextStyle = {
+  color: colors.palette.neutral900,
+}
